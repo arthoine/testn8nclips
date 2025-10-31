@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "total_clips": 3,
+    "total_duration": "1m48s",
+    "target_duration": "2m",
+    "game": "ARC Raiders",
+    "timestamp": "20251031_0107"
+  },
+  "clips": [
+    {
+      "id": "DifferentFitTroutCoolStoryBob-5TixTPM58R2gfWCu",
+      "url": "https://www.twitch.tv/mastersnakou/clip/DifferentFitTroutCoolStoryBob-5TixTPM58R2gfWCu",
+      "embed_url": "https://clips.twitch.tv/embed?clip=DifferentFitTroutCoolStoryBob-5TixTPM58R2gfWCu",
+      "broadcaster_id": "42141251",
+      "broadcaster_name": "MasterSnakou",
+      "creator_id": "510608854",
+      "creator_name": "asmaeo",
+      "video_id": "2605060731",
+      "game_id": "464339927",
+      "language": "fr",
+      "title": "THE grenade",
+      "view_count": 251,
+      "created_at": "2025-10-30T14:39:18Z",
+      "thumbnail_url": "https://static-cdn.jtvnw.net/twitch-clips-thumbnails-prod/DifferentFitTroutCoolStoryBob-5TixTPM58R2gfWCu/10fc2a90-c6e4-41ed-8911-5329a26eb132/preview-480x272.jpg",
+      "duration": 18,
+      "vod_offset": 22282,
+      "is_featured": false
+    },
+    {
+      "id": "OutstandingTrappedPidgeonChefFrank-ZxcX33TKumAMHvbi",
+      "url": "https://www.twitch.tv/sir_thomas_/clip/OutstandingTrappedPidgeonChefFrank-ZxcX33TKumAMHvbi",
+      "embed_url": "https://clips.twitch.tv/embed?clip=OutstandingTrappedPidgeonChefFrank-ZxcX33TKumAMHvbi",
+      "broadcaster_id": "71619324",
+      "broadcaster_name": "Sir_Thomas_",
+      "creator_id": "71619324",
+      "creator_name": "Sir_Thomas_",
+      "video_id": "2605040667",
+      "game_id": "464339927",
+      "language": "fr",
+      "title": "Arc Raiders Launch day ! October 30, 2025",
+      "view_count": 164,
+      "created_at": "2025-10-30T16:34:42Z",
+      "thumbnail_url": "https://static-cdn.jtvnw.net/twitch-clips-thumbnails-prod/OutstandingTrappedPidgeonChefFrank-ZxcX33TKumAMHvbi/e4502c43-708e-4666-b0ca-3ff144d6bb22/preview-480x272.jpg",
+      "duration": 60,
+      "vod_offset": 9038,
+      "is_featured": true
+    },
+    {
+      "id": "TalentedFairMochaStrawBeary-EeF029BwydplOQod",
+      "url": "https://www.twitch.tv/kaydop/clip/TalentedFairMochaStrawBeary-EeF029BwydplOQod",
+      "embed_url": "https://clips.twitch.tv/embed?clip=TalentedFairMochaStrawBeary-EeF029BwydplOQod",
+      "broadcaster_id": "63675549",
+      "broadcaster_name": "Kaydop",
+      "creator_id": "609951054",
+      "creator_name": "Sxeok",
+      "video_id": "2605097232",
+      "game_id": "464339927",
+      "language": "fr",
+      "title": "AAAAAAAAAAAAAAA",
+      "view_count": 133,
+      "created_at": "2025-10-30T12:58:49Z",
+      "thumbnail_url": "https://static-cdn.jtvnw.net/twitch-clips-thumbnails-prod/TalentedFairMochaStrawBeary-EeF029BwydplOQod/4f0a6364-382f-49a3-a474-4e3da2d694fd/preview-480x272.jpg",
+      "duration": 30,
+      "vod_offset": 10014,
+      "is_featured": false
+    }
+  ]
+}
