@@ -104,42 +104,58 @@ def main():
         fade_in = 0.3
         fade_out = max(0.5, display_duration - 0.5)
 
-        # Design moderne avec effet de glow et profondeur (multi-couches)
+        # Design futuriste style Valorant/Cyberpunk avec formes angulaires
         alpha_expr = f"if(lt(t,{fade_in}),t/{fade_in},if(gt(t,{fade_out}),({display_duration}-t)/0.5,1))"
 
         overlay_filter = (
-            # Couche 1: Glow externe violet (effet de halo)
+            # === COUCHE 1: GLOW EXTERNE (Halo néon rose/violet) ===
+            f"drawbox=x=25:y=25:w=500:h=90:color=#FF006E@0.15:t=fill:enable='between(t,0,{display_duration})',"
+
+            # === COUCHE 2: FOND PRINCIPAL SOMBRE (Base overlay) ===
+            f"drawbox=x=30:y=30:w=490:h=80:color=#0D0221@0.85:t=fill:enable='between(t,0,{display_duration})',"
+
+            # === COUCHE 3: BANDE VIOLETTE DÉGRADÉE (Élément principal) ===
+            # Partie gauche plus intense
+            f"drawbox=x=35:y=35:w=150:h=70:color=#A637F5@0.9:t=fill:enable='between(t,0,{display_duration})',"
+            # Partie centrale transition
+            f"drawbox=x=185:y=35:w=150:h=70:color=#A637F5@0.6:t=fill:enable='between(t,0,{display_duration})',"
+            # Partie droite fade out
+            f"drawbox=x=335:y=35:w=180:h=70:color=#A637F5@0.2:t=fill:enable='between(t,0,{display_duration})',"
+
+            # === COUCHE 4: ACCENT NÉON BLEU (Ligne supérieure) ===
+            f"drawbox=x=35:y=35:w=480:h=3:color=#46C4F4@1.0:t=fill:enable='between(t,0,{display_duration})',"
+            # Glow de la ligne bleue
+            f"drawbox=x=35:y=32:w=480:h=9:color=#46C4F4@0.3:t=fill:enable='between(t,0,{display_duration})',"
+
+            # === COUCHE 5: LIGNE ROSE NÉON (Ligne inférieure) ===
+            f"drawbox=x=35:y=102:w=400:h=3:color=#FF006E@0.9:t=fill:enable='between(t,0,{display_duration})',"
+            # Glow de la ligne rose
+            f"drawbox=x=35:y=100:w=400:h=7:color=#FF006E@0.25:t=fill:enable='between(t,0,{display_duration})',"
+
+            # === COUCHE 6: BORDURE GAUCHE ACCENT (Style Valorant) ===
+            f"drawbox=x=30:y=30:w=5:h=80:color=#46C4F4@1.0:t=fill:enable='between(t,0,{display_duration})',"
+            # Glow bordure
+            f"drawbox=x=27:y=30:w=11:h=80:color=#46C4F4@0.4:t=fill:enable='between(t,0,{display_duration})',"
+
+            # === COUCHE 7: PETITS ACCENTS DÉCORATIFS (Détails cyberpunk) ===
+            # Point lumineux haut gauche
+            f"drawbox=x=35:y=40:w=6:h=6:color=#FFFFFF@0.9:t=fill:enable='between(t,0,{display_duration})',"
+            f"drawbox=x=33:y=38:w=10:h=10:color=#FFFFFF@0.2:t=fill:enable='between(t,0,{display_duration})',"
+            # Point lumineux bas gauche
+            f"drawbox=x=35:y=95:w=4:h=4:color=#FF006E@0.9:t=fill:enable='between(t,0,{display_duration})',"
+
+            # === COUCHE 8: TEXTE STREAMER (Typographie futuriste) ===
             f"drawtext=text='{streamer_name}':"
             f"fontfile={font_path}:"
-            f"fontsize=56:"
-            f"fontcolor=#A637F5@0.0:"
-            f"x=50:y=50:"
-            f"box=1:"
-            f"boxcolor=#A637F5@0.25:"
-            f"boxborderw=35:"
-            f"enable='between(t,0,{display_duration})':"
-            f"alpha='{alpha_expr}',"
-            # Couche 2: Fond principal violet solide
-            f"drawtext=text='{streamer_name}':"
-            f"fontfile={font_path}:"
-            f"fontsize=56:"
-            f"fontcolor=#A637F5@0.0:"
-            f"x=50:y=50:"
-            f"box=1:"
-            f"boxcolor=#A637F5@0.95:"
-            f"boxborderw=25:"
-            f"enable='between(t,0,{display_duration})':"
-            f"alpha='{alpha_expr}',"
-            # Couche 3: Texte principal cyan avec glow
-            f"drawtext=text='{streamer_name}':"
-            f"fontfile={font_path}:"
-            f"fontsize=56:"
-            f"fontcolor=#46C4F4:"
-            f"x=50:y=50:"
-            f"shadowcolor=#FFFFFF@0.8:"
+            f"fontsize=48:"
+            f"fontcolor=#FFFFFF:"
+            f"x=55:y=52:"
+            # Glow cyan intense
+            f"shadowcolor=#46C4F4@0.9:"
             f"shadowx=0:shadowy=0:"
-            f"bordercolor=#0A0A0A@0.4:"
-            f"borderw=1:"
+            # Contour sombre pour contraste
+            f"bordercolor=#000000@0.6:"
+            f"borderw=2:"
             f"enable='between(t,0,{display_duration})':"
             f"alpha='{alpha_expr}'"
         )
