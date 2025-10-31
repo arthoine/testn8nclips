@@ -104,19 +104,44 @@ def main():
         fade_in = 0.3
         fade_out = max(0.5, display_duration - 0.5)
 
+        # Design moderne avec effet de glow et profondeur (multi-couches)
+        alpha_expr = f"if(lt(t,{fade_in}),t/{fade_in},if(gt(t,{fade_out}),({display_duration}-t)/0.5,1))"
+
         overlay_filter = (
+            # Couche 1: Glow externe violet (effet de halo)
+            f"drawtext=text='{streamer_name}':"
+            f"fontfile={font_path}:"
+            f"fontsize=56:"
+            f"fontcolor=#A637F5@0.0:"
+            f"x=50:y=50:"
+            f"box=1:"
+            f"boxcolor=#A637F5@0.25:"
+            f"boxborderw=35:"
+            f"enable='between(t,0,{display_duration})':"
+            f"alpha='{alpha_expr}',"
+            # Couche 2: Fond principal violet solide
+            f"drawtext=text='{streamer_name}':"
+            f"fontfile={font_path}:"
+            f"fontsize=56:"
+            f"fontcolor=#A637F5@0.0:"
+            f"x=50:y=50:"
+            f"box=1:"
+            f"boxcolor=#A637F5@0.95:"
+            f"boxborderw=25:"
+            f"enable='between(t,0,{display_duration})':"
+            f"alpha='{alpha_expr}',"
+            # Couche 3: Texte principal cyan avec glow
             f"drawtext=text='{streamer_name}':"
             f"fontfile={font_path}:"
             f"fontsize=56:"
             f"fontcolor=#46C4F4:"
-            f"shadowcolor=#FFFFFF@0.4:"
-            f"shadowx=2:shadowy=2:"
-            f"x=40:y=40:"
-            f"box=1:"
-            f"boxcolor=#A637F5@0.9:"
-            f"boxborderw=20:"
+            f"x=50:y=50:"
+            f"shadowcolor=#FFFFFF@0.8:"
+            f"shadowx=0:shadowy=0:"
+            f"bordercolor=#0A0A0A@0.4:"
+            f"borderw=1:"
             f"enable='between(t,0,{display_duration})':"
-            f"alpha='if(lt(t,{fade_in}),t/{fade_in},if(gt(t,{fade_out}),({display_duration}-t)/0.5,1))'"
+            f"alpha='{alpha_expr}'"
         )
 
         # Commande FFmpeg
