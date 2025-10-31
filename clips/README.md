@@ -4,8 +4,49 @@ Ce script Python compile automatiquement plusieurs clips Twitch en une seule vid
 
 ## Prérequis
 
-- Python 3.6+
-- FFmpeg installé et accessible dans le PATH
+### Python
+- Python 3.6 ou supérieur
+
+### FFmpeg (REQUIS)
+FFmpeg doit être installé et accessible dans votre PATH système.
+
+**Installation de FFmpeg:**
+
+**Windows:**
+```powershell
+# Option 1: Avec winget (Windows 10/11)
+winget install ffmpeg
+
+# Option 2: Téléchargement manuel
+# 1. Téléchargez depuis https://www.ffmpeg.org/download.html
+# 2. Extrayez l'archive
+# 3. Ajoutez le dossier bin à votre PATH système
+```
+
+**Linux:**
+```bash
+# Debian/Ubuntu
+sudo apt update && sudo apt install ffmpeg
+
+# Fedora
+sudo dnf install ffmpeg
+
+# Arch Linux
+sudo pacman -S ffmpeg
+```
+
+**macOS:**
+```bash
+# Avec Homebrew
+brew install ffmpeg
+```
+
+**Vérification de l'installation:**
+```bash
+ffmpeg -version
+```
+
+Le script vérifiera automatiquement la présence de FFmpeg au démarrage.
 
 ## Utilisation
 
@@ -87,3 +128,39 @@ Le script génère :
 
 - `0` : Succès
 - `1` : Erreur (dossier inexistant, JSON invalide, aucun clip traité, erreur FFmpeg)
+
+## Dépannage
+
+### Erreur: "FFmpeg n'est pas installé ou n'est pas dans le PATH"
+
+**Symptômes:**
+```
+❌ ERREUR: FFmpeg n'est pas installé ou n'est pas dans le PATH
+```
+
+**Solutions:**
+1. Installez FFmpeg selon les instructions ci-dessus
+2. Vérifiez que FFmpeg est dans votre PATH:
+   - Ouvrez un nouveau terminal/PowerShell
+   - Tapez `ffmpeg -version`
+   - Si cela ne fonctionne pas, redémarrez votre terminal après l'installation
+
+**Windows:** Après avoir ajouté FFmpeg au PATH, redémarrez PowerShell/CMD
+
+### Erreur: "Le fichier spécifié est introuvable"
+
+Si vous voyez `[WinError 2] Le fichier spécifié est introuvable`, cela signifie que FFmpeg n'est pas trouvé. Suivez les étapes ci-dessus.
+
+### Les clips ne sont pas trouvés
+
+Vérifiez que:
+1. Le chemin du dossier est correct
+2. Les fichiers MP4 sont nommés avec leur ID (ex: `DifferentFitTroutCoolStoryBob-5TixTPM58R2gfWCu.mp4`)
+3. Les IDs dans le JSON correspondent aux noms des fichiers MP4
+
+### Problèmes de font sur Windows
+
+Si vous rencontrez des erreurs liées aux fonts:
+1. Le script utilise par défaut `C:\Windows\Fonts\arial.ttf`
+2. Vérifiez que cette font existe sur votre système
+3. Si nécessaire, le chemin est automatiquement détecté selon votre OS

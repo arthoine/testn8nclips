@@ -2,7 +2,29 @@ import subprocess
 import json
 import sys
 import argparse
+import shutil
 from pathlib import Path
+
+def check_ffmpeg():
+    """Vérifie si FFmpeg est installé et accessible"""
+    if shutil.which('ffmpeg') is None:
+        print('❌ ERREUR: FFmpeg n\'est pas installé ou n\'est pas dans le PATH')
+        print('\n📥 Pour installer FFmpeg:')
+        print('   Windows: https://www.ffmpeg.org/download.html')
+        print('            ou utilisez: winget install ffmpeg')
+        print('   Linux:   sudo apt install ffmpeg (Debian/Ubuntu)')
+        print('            sudo dnf install ffmpeg (Fedora)')
+        print('   macOS:   brew install ffmpeg')
+        print('\n💡 Assurez-vous que FFmpeg est dans votre PATH après installation')
+        sys.exit(1)
+
+    # Vérifier la version de FFmpeg
+    try:
+        result = subprocess.run(['ffmpeg', '-version'], capture_output=True, text=True, timeout=5)
+        version_line = result.stdout.split('\n')[0]
+        print(f'✅ FFmpeg détecté: {version_line}')
+    except Exception as e:
+        print(f'⚠️ FFmpeg trouvé mais erreur lors de la vérification de la version: {e}')
 
 def main():
     # Parser les arguments de ligne de commande
@@ -11,6 +33,9 @@ def main():
     parser.add_argument('--json', '-j', type=str, help='Chemin du fichier JSON (par défaut: clips_data.json dans le dossier des clips)')
 
     args = parser.parse_args()
+
+    # Vérifier FFmpeg avant tout
+    check_ffmpeg()
 
     # Définir les chemins
     output_folder = Path(args.clips_path)
@@ -106,14 +131,23 @@ def main():
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=300)
             processed_clips.append(str(temp_output))
+        except FileNotFoundError:
+            print(f'❌ FFmpeg introuvable - Vérifiez votre installation')
+            print(f'   Commande tentée: {" ".join(cmd[:3])}...')
+            sys.exit(1)
         except subprocess.TimeoutExpired:
             print(f'⏱️ Timeout dépassé pour {clip["id"]}')
             continue
         except subprocess.CalledProcessError as e:
-            print(f'❌ Erreur FFmpeg: {e.stderr[:200]}')
+            print(f'❌ Erreur FFmpeg pour {clip["id"]}:')
+            if e.stderr:
+                # Afficher les dernières lignes de l'erreur FFmpeg
+                error_lines = e.stderr.strip().split('\n')
+                for line in error_lines[-5:]:
+                    print(f'   {line}')
             continue
         except Exception as e:
-            print(f'❌ Erreur inattendue: {e}')
+            print(f'❌ Erreur inattendue pour {clip["id"]}: {type(e).__name__} - {e}')
             continue
 
     print(f'\n✅ {len(processed_clips)} clips traités avec succès')
@@ -144,7 +178,7 @@ def main():
     try:
         result = subprocess.run(concat_cmd, capture_output=True, text=True, check=True, timeout=600)
         print(f'\n🎉 COMPILATION TERMINÉE!')
-        print(f'📹 {output_file}')
+        print(f'📹 Fichier de sortie: {output_file}')
         print(f'📊 Stats: {len(processed_clips)}/{len(clips)} clips traités')
 
         # Afficher la durée totale si disponible dans les métadonnées
@@ -152,12 +186,19 @@ def main():
             print(f'⏱️ Durée totale: {json_data["metadata"]["total_duration"]}')
 
         sys.exit(0)
+    except FileNotFoundError:
+        print(f'❌ FFmpeg introuvable lors de la concaténation')
+        sys.exit(1)
     except subprocess.CalledProcessError as e:
-        print(f'❌ Erreur concaténation: {e.stderr}')
+        print(f'❌ Erreur lors de la concaténation finale:')
+        if e.stderr:
+            error_lines = e.stderr.strip().split('\n')
+            for line in error_lines[-5:]:
+                print(f'   {line}')
         print(f'📊 {len(processed_clips)}/{len(clips)} clips ont été traités avant l\'erreur')
         sys.exit(1)
     except Exception as e:
-        print(f'❌ Erreur: {e}')
+        print(f'❌ Erreur inattendue: {type(e).__name__} - {e}')
         print(f'📊 {len(processed_clips)}/{len(clips)} clips ont été traités avant l\'erreur')
         sys.exit(1)
 
