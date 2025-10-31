@@ -160,12 +160,16 @@ def main():
             f"alpha='{alpha_expr}'"
         )
 
-        # Commande FFmpeg
+        # Commande FFmpeg avec normalisation pour assurer la compatibilité
         cmd = [
             'ffmpeg', '-i', str(input_file),
             '-vf', overlay_filter,
+            # Normaliser la vidéo pour la concaténation
             '-c:v', 'libx264', '-preset', 'medium', '-crf', '23',
-            '-c:a', 'aac', '-b:a', '192k',
+            '-r', '30',  # Forcer 30 FPS
+            '-pix_fmt', 'yuv420p',  # Format de pixel standard
+            # Audio
+            '-c:a', 'aac', '-b:a', '192k', '-ar', '48000',  # 48kHz sample rate
             '-y', str(temp_output)
         ]
 
@@ -206,13 +210,19 @@ def main():
             f.write(f"file '{escaped_path}'\n")
 
     print('\n🎞️ Assemblage final...')
+    print('⚙️ Réencodage et fusion des clips (peut prendre quelques minutes)...')
 
-    # Concaténer tous les clips
+    # Concaténer tous les clips avec réencodage pour assurer la compatibilité
     output_file = output_folder / 'compilation_finale.mp4'
     concat_cmd = [
         'ffmpeg', '-f', 'concat', '-safe', '0',
         '-i', str(concat_file),
-        '-c', 'copy',
+        # Réencoder pour garantir la compatibilité
+        '-c:v', 'libx264', '-preset', 'medium', '-crf', '23',
+        '-r', '30',  # 30 FPS
+        '-pix_fmt', 'yuv420p',
+        '-c:a', 'aac', '-b:a', '192k', '-ar', '48000',
+        '-movflags', '+faststart',  # Optimisation pour lecture web
         '-y', str(output_file)
     ]
 
