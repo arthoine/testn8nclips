@@ -224,14 +224,30 @@ def main():
     ]
 
     try:
+        print('   Lancement de FFmpeg...')
         result = subprocess.run(concat_cmd, capture_output=True, text=True, check=True, timeout=120)
-        print(f'\n🎉 COMPILATION TERMINÉE!')
-        print(f'📹 Fichier de sortie: {output_file}')
-        print(f'📊 Stats: {len(processed_clips)}/{len(clips)} clips traités')
 
-        # Afficher la durée totale si disponible dans les métadonnées
-        if 'metadata' in json_data and 'total_duration' in json_data['metadata']:
-            print(f'⏱️ Durée totale: {json_data["metadata"]["total_duration"]}')
+        # Vérifier que le fichier existe et a une taille raisonnable
+        if output_file.exists():
+            file_size = output_file.stat().st_size
+            if file_size < 1000:  # Moins de 1 KB = problème
+                print(f'⚠️ ATTENTION: Le fichier de sortie est très petit ({file_size} bytes)')
+                print('   Le fichier pourrait être corrompu.')
+            else:
+                print(f'\n🎉 COMPILATION TERMINÉE!')
+                print(f'📹 Fichier de sortie: {output_file}')
+                print(f'📊 Taille: {file_size / (1024*1024):.1f} MB')
+                print(f'📊 Stats: {len(processed_clips)}/{len(clips)} clips traités')
+
+                # Afficher la durée totale si disponible dans les métadonnées
+                if 'metadata' in json_data and 'total_duration' in json_data['metadata']:
+                    print(f'⏱️ Durée totale: {json_data["metadata"]["total_duration"]}')
+        else:
+            print(f'❌ ERREUR: Le fichier de sortie n\'a pas été créé')
+            print(f'   Attendu: {output_file}')
+            if result.stderr:
+                print('\n📋 Sortie FFmpeg:')
+                print(result.stderr[-1000:])  # Derniers 1000 caractères
 
         sys.exit(0)
     except FileNotFoundError:
@@ -239,11 +255,19 @@ def main():
         sys.exit(1)
     except subprocess.CalledProcessError as e:
         print(f'❌ Erreur lors de la concaténation finale:')
+        print(f'\n📋 Commande FFmpeg:')
+        print(' '.join(concat_cmd))
         if e.stderr:
+            print(f'\n📋 Erreur FFmpeg (dernières lignes):')
             error_lines = e.stderr.strip().split('\n')
-            for line in error_lines[-5:]:
+            for line in error_lines[-10:]:
                 print(f'   {line}')
-        print(f'📊 {len(processed_clips)}/{len(clips)} clips ont été traités avant l\'erreur')
+        print(f'\n📊 {len(processed_clips)}/{len(clips)} clips ont été traités avant l\'erreur')
+        sys.exit(1)
+    except subprocess.TimeoutExpired as e:
+        print(f'❌ Timeout dépassé lors de la concaténation (120s)')
+        print(f'   Cela peut arriver avec beaucoup de clips.')
+        print(f'   Les fichiers individuels sont dans: {temp_folder}')
         sys.exit(1)
     except Exception as e:
         print(f'❌ Erreur inattendue: {type(e).__name__} - {e}')
