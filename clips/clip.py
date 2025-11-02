@@ -210,24 +210,21 @@ def main():
             f.write(f"file '{escaped_path}'\n")
 
     print('\n🎞️ Assemblage final...')
-    print('⚙️ Réencodage et fusion des clips (peut prendre quelques minutes)...')
+    print('⚡ Fusion des clips normalisés (rapide)...')
 
-    # Concaténer tous les clips avec réencodage pour assurer la compatibilité
+    # Concaténer tous les clips - Comme ils sont déjà normalisés, on peut utiliser copy
+    # pour une fusion instantanée sans perte de qualité
     output_file = output_folder / 'compilation_finale.mp4'
     concat_cmd = [
         'ffmpeg', '-f', 'concat', '-safe', '0',
         '-i', str(concat_file),
-        # Réencoder pour garantir la compatibilité
-        '-c:v', 'libx264', '-preset', 'medium', '-crf', '23',
-        '-r', '30',  # 30 FPS
-        '-pix_fmt', 'yuv420p',
-        '-c:a', 'aac', '-b:a', '192k', '-ar', '48000',
-        '-movflags', '+faststart',  # Optimisation pour lecture web
+        # Copy car tous les clips sont déjà normalisés (30fps, yuv420p, 48kHz)
+        '-c', 'copy',
         '-y', str(output_file)
     ]
 
     try:
-        result = subprocess.run(concat_cmd, capture_output=True, text=True, check=True, timeout=600)
+        result = subprocess.run(concat_cmd, capture_output=True, text=True, check=True, timeout=120)
         print(f'\n🎉 COMPILATION TERMINÉE!')
         print(f'📹 Fichier de sortie: {output_file}')
         print(f'📊 Stats: {len(processed_clips)}/{len(clips)} clips traités')
