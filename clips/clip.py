@@ -160,16 +160,22 @@ def main():
             f"alpha='{alpha_expr}'"
         )
 
-        # Commande FFmpeg avec normalisation pour assurer la compatibilité
+        # Commande FFmpeg avec conversion HEVC -> H.264 et normalisation
         cmd = [
-            'ffmpeg', '-i', str(input_file),
+            'ffmpeg',
+            '-hwaccel', 'auto',  # Accélération matérielle si disponible
+            '-i', str(input_file),
             '-vf', overlay_filter,
-            # Normaliser la vidéo pour la concaténation
+            # Forcer conversion en H.264 (même si source est HEVC)
             '-c:v', 'libx264', '-preset', 'medium', '-crf', '23',
-            '-r', '30',  # Forcer 30 FPS
+            '-profile:v', 'high',  # Profile H.264 compatible
+            '-level', '4.0',  # Level compatible
+            '-r', '30',  # Forcer 30 FPS constant
+            '-vsync', 'cfr',  # Constant Frame Rate (important!)
             '-pix_fmt', 'yuv420p',  # Format de pixel standard
             # Audio
-            '-c:a', 'aac', '-b:a', '192k', '-ar', '48000',  # 48kHz sample rate
+            '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2',  # Stéreo 48kHz
+            '-max_muxing_queue_size', '1024',  # Éviter buffer overflow
             '-y', str(temp_output)
         ]
 

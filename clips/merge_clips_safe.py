@@ -41,17 +41,22 @@ def main():
     print(f'\n🎞️ Fusion avec réencodage complet (LENT mais SÛR)...')
     print(f'⏱️ Cela peut prendre 10-20 minutes pour {len(clips)} clips...')
 
-    # Commande FFmpeg avec réencodage complet
+    # Commande FFmpeg avec réencodage complet (HEVC -> H.264 si nécessaire)
     cmd = [
-        'ffmpeg', '-f', 'concat', '-safe', '0',
+        'ffmpeg',
+        '-hwaccel', 'auto',  # Accélération matérielle
+        '-f', 'concat', '-safe', '0',
         '-i', str(concat_file),
-        # Réencodage complet
+        # Réencodage complet en H.264
         '-c:v', 'libx264', '-preset', 'fast', '-crf', '23',
+        '-profile:v', 'high',  # Profile H.264 compatible
+        '-level', '4.0',
         '-r', '30',
+        '-vsync', 'cfr',  # Constant Frame Rate
         '-pix_fmt', 'yuv420p',
-        '-c:a', 'aac', '-b:a', '192k', '-ar', '48000',
+        '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2',
         '-movflags', '+faststart',
-        '-max_muxing_queue_size', '1024',  # Éviter les problèmes de buffer
+        '-max_muxing_queue_size', '1024',
         '-y', str(output_file)
     ]
 
